@@ -1,0 +1,47 @@
+def calcPaddlePosition3(x, y, dx, dy):
+	xMinCam = 4
+	xMaxCam = 210
+	yMinCam = 15
+	yMaxCam = 120
+
+	xMinArd = 40 
+	xMaxArd = 440
+	yMinArd = 130
+	yMaxArd = 385
+
+
+	if abs(dy) > 20:		#these two if statements help with camera noise 
+		newY = y
+	if abs(dx) > 20:
+		newX = x
+
+	if dy != 0:
+		newX = x + ((dx / dy) * (y - yMinCam)) #calc where the puck will be when it gets to the paddle's axis
+		#newX = x + (dx / dy * y)
+		#newX = x + dx
+	else:
+		newX = x
+	newY = 130
+
+	#bouncing off walls code?----------------------------
+	if newX < xMinCam:
+		newX = xMinCam + (-newX + xMinCam)
+	if newX > xMaxCam:
+		newX = xMaxCam - (newX - xMaxCam)
+	#-------------------------------------------------
+
+	ardX = float(newX) * (float(xMaxArd - xMinArd) / float(xMaxCam - xMinCam))  # arduino xmax - xmin / camera xmax - xmin
+	#ardY = float(newY) * (float(yMaxArd - yMinArd) / float(yMaxCam - yMinCam))   # same but y
+	#print("ardx",ardX)
+	ardY = newY
+
+	if ardX > xMaxArd:
+		ardX = xMaxArd
+	if ardX < xMinArd:
+		ardX = xMinArd
+#	if ardY > yMaxArd:
+#		ardY = yMaxArd
+#	if ardY < yMinArd:
+#		ardY = yMinArd
+
+	return int(ardX), int(ardY) 
